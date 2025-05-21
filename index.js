@@ -10,13 +10,21 @@ export default function EnderChatDemo() {
   ]);
   const [input, setInput] = useState("");
 
+  const speakText = (text) => {
+    if ('speechSynthesis' in window) {
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'tr-TR';
+      speechSynthesis.speak(utterance);
+    }
+  };
+
   const handleSend = () => {
     if (!input.trim()) return;
-    setMessages((prev) => [
-      ...prev,
-      { sender: "Sen", text: input },
-      { sender: "Chatkız", text: "Hmm... Çok ilginç! Daha fazlasını anlatır mısın? 😄" },
-    ]);
+    const userMessage = { sender: "Sen", text: input };
+    const botResponse = { sender: "Chatkız", text: "Hmm... Çok ilginç! Daha fazlasını anlatır mısın? 😄" };
+
+    setMessages((prev) => [...prev, userMessage, botResponse]);
+    speakText(botResponse.text);
     setInput("");
   };
 
